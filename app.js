@@ -11,11 +11,18 @@ app.get("/", (req, res) => {
 app.get("/employees", (req, res) => {
     res.json(employees);
     });
-app.get("/employees/random", (req, res) => {
-    const randomIndex = Math.floor(Math.random() * employees.length);
-    res.send(employees[randomIndex]);
 
+app.get("/employees/random", (req, res) => {
+    let randomEmployee;
+    do {
+        const randomIndex = Math.floor(Math.random() * employees.length);
+        randomEmployee = employees[randomIndex];
+    } while (employees.length > 1 && randomEmployee.id === lastRandomId);
+    
+    lastRandomId = randomEmployee.id;
+    res.send(randomEmployee);
     });
+    
     app.get("/employees/:id", (req, res) => {
         const id = parseInt(req.params.id);
         const employee = employees.find(emp => emp.id === id);
